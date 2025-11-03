@@ -1,0 +1,45 @@
+# 🧠 Python cache & compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 🧠 Virtual environment folders
+venv/
+env/
+.venv/
+
+# 🧠 Environment & configuration files
+.env
+*.env
+
+# 🧠 IDE / Editor files (VS Code, PyCharm, etc.)
+.vscode/
+.idea/
+*.swp
+
+# 🧠 macOS and Windows system files
+.DS_Store
+Thumbs.db
+
+# 🧠 Log files and temporary data
+*.log
+*.tmp
+
+# 🧠 Databases or sensitive info
+*.db
+*.sqlite3
+*.sql
+config.json
+
+# 🧠 Backup or distribution files
+*.bak
+*.zip
+*.tar
+*.tar.gz
+
+# 🧠 Jupyter notebooks (optional)
+*.ipynb_checkpoints/
+
+# 🧠 Node (if you later add frontend JS)
+node_modules/
+npm-debug.log
