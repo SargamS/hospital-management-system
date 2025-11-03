@@ -1,45 +1,33 @@
-# 🧠 Python cache & compiled files
+# Byte-compiled / cache
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
 *$py.class
 
-# 🧠 Virtual environment folders
+# Virtual environments
 venv/
-env/
+.env/
 .venv/
 
-# 🧠 Environment & configuration files
-.env
-*.env
+# SQLite database (local copy)
+hospital.db
 
-# 🧠 IDE / Editor files (VS Code, PyCharm, etc.)
+# Logs and cache
+*.log
+*.sqlite3
+*.db-journal
+
+# IDE & OS files
+.DS_Store
 .vscode/
 .idea/
-*.swp
 
-# 🧠 macOS and Windows system files
-.DS_Store
-Thumbs.db
+# Python environment / dependency tools
+pip-log.txt
+*.egg-info/
+dist/
+build/
 
-# 🧠 Log files and temporary data
-*.log
-*.tmp
-
-# 🧠 Databases or sensitive info
-*.db
-*.sqlite3
-*.sql
-config.json
-
-# 🧠 Backup or distribution files
-*.bak
-*.zip
-*.tar
-*.tar.gz
-
-# 🧠 Jupyter notebooks (optional)
-*.ipynb_checkpoints/
-
-# 🧠 Node (if you later add frontend JS)
-node_modules/
-npm-debug.log
+# Render specific
+.render/
