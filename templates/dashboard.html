@@ -1,60 +1,27 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="grid lg:grid-cols-3 gap-6">
-  <div class="bg-black/90 text-white rounded-2xl p-6 shadow">
-    <h3 class="text-sm text-slate-300">Visitors / Stats</h3>
-    <div class="mt-6 text-4xl font-bold"> {{ counts.patients }} </div>
-    <p class="text-xs text-slate-400 mt-2">Total registered patients</p>
+<section class="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+  <!-- Total Patients -->
+  <div class="rounded-3xl bg-gradient-to-br from-orange-200 to-orange-100 p-6 shadow">
+    <h3 class="text-gray-700 text-lg font-medium">Total Patients</h3>
+    <p class="text-5xl font-bold text-orange-700 mt-4">{{ total_patients }}</p>
+    <p class="text-sm text-gray-600 mt-2">This month’s registrations</p>
   </div>
 
-  <div class="bg-white rounded-2xl p-6 shadow">
-    <h3 class="text-sm text-slate-600">Doctors Available</h3>
-    <div class="mt-6 text-3xl font-semibold text-green-600">{{ counts.doctors }}</div>
-    <p class="text-xs text-slate-400 mt-2">Active doctors</p>
+  <!-- Doctors -->
+  <div class="rounded-3xl bg-gradient-to-br from-purple-200 to-purple-100 p-6 shadow">
+    <h3 class="text-gray-700 text-lg font-medium">Doctors</h3>
+    <p class="text-5xl font-bold text-purple-700 mt-4">{{ total_doctors }}</p>
+    <p class="text-sm text-gray-600 mt-2">Available today</p>
   </div>
 
-  <div class="bg-white rounded-2xl p-6 shadow">
-    <h3 class="text-sm text-slate-600">Medicine Types</h3>
-    <div class="mt-6 text-3xl font-semibold text-purple-600">{{ counts.medicines }}</div>
-    <p class="text-xs text-slate-400 mt-2">Different medicines in stock</p>
-  </div>
-</div>
-
-<div class="grid lg:grid-cols-2 gap-6 mt-6">
-  <div class="bg-white rounded-2xl p-6 shadow">
-    <h3 class="text-slate-700">Monthly Revenue</h3>
-    <div class="mt-4">
-      <canvas id="revenueChart" height="120"></canvas>
-    </div>
-    <div class="mt-4 text-lg font-semibold">Total Revenue: ${{ '{:.2f}'.format(total_revenue) }}</div>
+  <!-- Revenue -->
+  <div class="rounded-3xl bg-gradient-to-br from-green-200 to-green-100 p-6 shadow">
+    <h3 class="text-gray-700 text-lg font-medium">Monthly Revenue</h3>
+    <p class="text-4xl font-bold text-green-700 mt-4">₹{{ total_revenue }}</p>
+    <p class="text-sm text-gray-600 mt-2">Includes pharmacy + billing</p>
   </div>
 
-  <div class="bg-white rounded-2xl p-6 shadow">
-    <h3 class="text-slate-700">Medicine Stock Overview</h3>
-    <canvas id="stockChart" height="120"></canvas>
-  </div>
-</div>
-
-<script>
-const medLabels = {{ med_labels|safe }};
-const medValues = {{ med_values|safe }};
-
-new Chart(document.getElementById('stockChart'), {
-  type: 'doughnut',
-  data: {
-    labels: medLabels,
-    datasets: [{ data: medValues, backgroundColor: ['#34D399','#60A5FA','#F472B6','#FBBF24','#A78BFA','#F87171'] }]
-  },
-  options: { plugins: { legend: { position: 'bottom' } } }
-});
-
-new Chart(document.getElementById('revenueChart'), {
-  type: 'bar',
-  data: {
-    labels: ['Jan','Feb','Mar','Apr','May','Jun'],
-    datasets: [{ label: 'Revenue', data: [1200,1800,1500,2100,2400,3000], backgroundColor: '#34D399' }]
-  },
-  options: { scales: { y: { beginAtZero: true } } }
-});
-</script>
+</section>
 {% endblock %}
