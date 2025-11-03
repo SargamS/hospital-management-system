@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Patient</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+  <nav class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-green-600">➕ Add Patient</h1>
+    <a href="/patients" class="text-green-600 hover:underline">← Back to Patients</a>
+  </nav>
+
+  <div class="max-w-2xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow">
+    <form method="POST" class="space-y-5">
+      <div>
+        <label class="block text-gray-700">Name</label>
+        <input name="name" required class="w-full p-2 border rounded-lg" />
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-gray-700">Age</label>
+          <input name="age" type="number" required class="w-full p-2 border rounded-lg" />
+        </div>
+        <div>
+          <label class="block text-gray-700">Gender</label>
+          <select name="gender" class="w-full p-2 border rounded-lg">
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Phone</label>
+        <input name="phone" required class="w-full p-2 border rounded-lg" />
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Address</label>
+        <input name="address" required class="w-full p-2 border rounded-lg" />
+      </div>
+
+      <div>
+        <label class="block text-gray-700">Disease / Condition</label>
+        <input name="disease" required class="w-full p-2 border rounded-lg" />
+      </div>
+
+      <button class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">Save Patient</button>
+    </form>
+  </div>
+</body>
+</html>
