@@ -1,8 +1,22 @@
-<h2>Available Doctors</h2>
-<table>
-  <tr><th>Name</th><th>Department</th><th>Room No.</th></tr>
-  {% for doc in doctors %}
-  <tr><td>{{ doc[0] }}</td><td>{{ doc[1] }}</td><td>{{ doc[2] }}</td></tr>
-  {% endfor %}
-</table>
-<a href="/">Back to Home</a>
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white rounded-2xl p-6 shadow">
+  <h2 class="text-lg font-semibold">Doctors</h2>
+  <a href="{{ url_for('add_doctor') }}" class="inline-block px-3 py-2 mt-3 bg-green-600 text-white rounded">Add Doctor</a>
+  <table class="min-w-full mt-4">
+    <thead><tr><th>Name</th><th>Spec</th><th>Phone</th><th>Email</th><th></th></tr></thead>
+    <tbody>
+      {% for d in doctors %}
+      <tr class="border-t">
+        <td>{{ d.name }}</td><td>{{ d.specialization }}</td><td>{{ d.phone }}</td><td>{{ d.email }}</td>
+        <td>
+          <form method="post" action="{{ url_for('delete_doctor', doc_id=d.doc_id) }}" onsubmit="return confirm('Delete doctor?')">
+            <button class="px-2 py-1 text-sm bg-red-500 text-white rounded">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
