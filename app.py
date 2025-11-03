@@ -136,6 +136,7 @@ def dashboard():
                            med_values=json.dumps(med_values),
                            total_revenue=total_revenue)
 
+
 # --------- Patients -----------
 @app.route('/register', methods=['GET','POST'])
 def register():
