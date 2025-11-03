@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white rounded-2xl p-6 shadow">
+  <div class="flex justify-between">
+    <h3 class="text-lg font-semibold">Nurses</h3>
+    <a href="{{ url_for('add_nurse') }}" class="px-3 py-2 bg-green-600 text-white rounded">Add Nurse</a>
+  </div>
+  <table class="min-w-full mt-4">
+    <thead><tr><th>Name</th><th>Assigned Doctor</th><th>Shift</th></tr></thead>
+    <tbody>
+    {% for n in nurses %}
+      <tr class="border-t">
+        <td>{{ n.name }}</td>
+        <td>{{ n.doctor_name or '-' }}</td>
+        <td>{{ n.shift }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
