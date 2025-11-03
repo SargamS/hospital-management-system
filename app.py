@@ -13,16 +13,19 @@ conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 conn.row_factory = sqlite3.Row
 cur = conn.cursor()
 
-# Create all required tables
-cur.executescript("""
-CREATE TABLE IF NOT EXISTS appt (
-    idno TEXT PRIMARY KEY,
+# Create all required table
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS patients (
+    patient_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     age INTEGER,
     gender TEXT,
     phone TEXT,
-    bg TEXT
-);
+    address TEXT,
+    disease TEXT
+)
+''')
+db.commit()
 
 CREATE TABLE IF NOT EXISTS doctors (
     doc_id INTEGER PRIMARY KEY AUTOINCREMENT,
