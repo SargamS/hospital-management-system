@@ -166,6 +166,38 @@ def delete_patient(idno):
     flash("Patient deleted", "success")
     return redirect(url_for('appointments'))
 
+# ---------------------------------------------------------
+# 👩‍⚕️ PATIENT MANAGEMENT
+# ---------------------------------------------------------
+@app.route('/patients')
+def patients():
+    cursor.execute("SELECT * FROM patients")
+    data = cursor.fetchall()
+    return render_template('patients.html', data=data)
+
+@app.route('/add_patient', methods=['GET', 'POST'])
+def add_patient():
+    if request.method == 'POST':
+        name = request.form['name']
+        age = request.form['age']
+        gender = request.form['gender']
+        phone = request.form['phone']
+        address = request.form['address']
+        disease = request.form['disease']
+
+        cursor.execute("INSERT INTO patients (name, age, gender, phone, address, disease) VALUES (?, ?, ?, ?, ?, ?)",
+                       (name, age, gender, phone, address, disease))
+        db.commit()
+        return redirect('/patients')
+    return render_template('add_patient.html')
+
+@app.route('/delete_patient/<int:id>')
+def delete_patient(id):
+    cursor.execute("DELETE FROM patients WHERE patient_id=?", (id,))
+    db.commit()
+    return redirect('/patients')
+
+
 # --------- Doctors -----------
 @app.route('/doctors')
 def doctors():
