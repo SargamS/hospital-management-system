@@ -13,8 +13,8 @@ conn = sqlite3.connect(DB_PATH, check_same_thread=False)
 conn.row_factory = sqlite3.Row
 cur = conn.cursor()
 
-# Create all required table
-cursor.execute('''
+# ---------- CREATE ALL REQUIRED TABLES ----------
+cur.executescript("""
 CREATE TABLE IF NOT EXISTS patients (
     patient_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
@@ -23,9 +23,7 @@ CREATE TABLE IF NOT EXISTS patients (
     phone TEXT,
     address TEXT,
     disease TEXT
-)
-''')
-db.commit()
+);
 
 CREATE TABLE IF NOT EXISTS doctors (
     doc_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,7 +36,7 @@ CREATE TABLE IF NOT EXISTS doctors (
 CREATE TABLE IF NOT EXISTS nurses (
     nurse_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
-    assigned_to INTEGER, -- doctor id
+    assigned_to INTEGER,
     shift TEXT
 );
 
@@ -53,8 +51,8 @@ CREATE TABLE IF NOT EXISTS facilities (
     bed_id INTEGER PRIMARY KEY AUTOINCREMENT,
     room_no TEXT,
     bed_type TEXT,
-    availability TEXT, -- 'available' or 'occupied'
-    patient_id TEXT -- idno of patient or NULL
+    availability TEXT,
+    patient_id TEXT
 );
 
 CREATE TABLE IF NOT EXISTS canteen_items (
@@ -66,7 +64,7 @@ CREATE TABLE IF NOT EXISTS canteen_items (
 CREATE TABLE IF NOT EXISTS canteen_orders (
     order_id INTEGER PRIMARY KEY AUTOINCREMENT,
     patient_id TEXT,
-    items TEXT, -- JSON list of {item_id, name, qty, price}
+    items TEXT,
     total REAL,
     status TEXT,
     created_at TEXT
@@ -75,12 +73,13 @@ CREATE TABLE IF NOT EXISTS canteen_orders (
 CREATE TABLE IF NOT EXISTS bills (
     bill_id INTEGER PRIMARY KEY AUTOINCREMENT,
     patient_id TEXT,
-    items TEXT, -- JSON list {desc, amount}
+    items TEXT,
     total REAL,
     date TEXT
 );
 """)
 conn.commit()
+
 
 # ---------------- Helper functions ----------------
 
