@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow">
+  <h3 class="text-lg font-semibold">Add Nurse</h3>
+  <form method="post" class="mt-4 space-y-3">
+    <input name="name" placeholder="Name" required class="w-full p-2 border rounded">
+    <select name="assigned_to" class="w-full p-2 border rounded">
+      <option value="">Assign to doctor (optional)</option>
+      {% for d in doctors %}
+      <option value="{{ d.doc_id }}">{{ d.name }} — {{ d.specialization }}</option>
+      {% endfor %}
+    </select>
+    <input name="shift" placeholder="Shift (e.g. Morning)" class="w-full p-2 border rounded">
+    <div class="text-right"><button class="px-4 py-2 bg-green-600 text-white rounded">Add Nurse</button></div>
+  </form>
+</div>
+{% endblock %}
