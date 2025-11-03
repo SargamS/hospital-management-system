@@ -1,14 +1,16 @@
-# 🏥 Hospital Management System
+# 🏥 MedCare — Smart Hospital Management System  
 
-A web-based hospital management app built with Flask and MySQL.
+A modern, full-stack **Hospital Management System** built with **Flask (Python)** and **SQLite**, featuring an intuitive, mobile-friendly UI inspired by futuristic dashboards.  
+It helps streamline hospital operations such as **patient management**, **doctor scheduling**, **pharmacy stock**, **canteen food orders**, **bed allocation**, and **billing**, all in one place.  
 
-## Features
-- Register new patients
-- View appointments
-- List of doctors and services
-- Simple UI
+---
 
-## Run locally
-```bash
-pip install -r requirements.txt
-python app.py
+## 🌟 Features
+
+### 👩‍⚕️ Patient Management
+### 🧑‍⚕️ Doctor & Nurse Management
+### 🏠 Facility / Bed Management
+### 💊 Pharmacy Management
+### 🍱 Canteen & Food Ordering
+### 💸 Billing System
+### 📊 Admin Dashboard
