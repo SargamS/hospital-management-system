@@ -1,0 +1,8 @@
+<h2>Hospital Services</h2>
+<table>
+  <tr><th>Service</th><th>Room No.</th></tr>
+  {% for s in services %}
+  <tr><td>{{ s[0] }}</td><td>{{ s[1] }}</td></tr>
+  {% endfor %}
+</table>
+<a href="/">Back to Home</a>
