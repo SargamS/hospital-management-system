@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow">
+  <h3 class="text-lg font-semibold">Add Bed</h3>
+  <form method="post" class="space-y-3">
+    <input name="room_no" placeholder="Room number" required class="w-full p-2 border rounded">
+    <input name="bed_type" placeholder="Bed type (General / VIP)" required class="w-full p-2 border rounded">
+    <div class="text-right"><button class="px-4 py-2 bg-green-600 text-white rounded">Add Bed</button></div>
+  </form>
+</div>
+{% endblock %}
