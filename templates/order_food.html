@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white rounded-2xl p-6 shadow max-w-2xl mx-auto">
+  <h3 class="text-lg font-semibold">Place Food Order</h3>
+  <form method="post" class="mt-4 space-y-3">
+    <input name="patient_id" placeholder="Patient Aadhaar (optional)" class="w-full p-2 border rounded">
+    <div class="grid gap-3 mt-3">
+      {% for it in items %}
+      <div class="flex items-center gap-3">
+        <div class="flex-1">{{ it.name }} — ${{ '{:.2f}'.format(it.price) }}</div>
+        <input name="item_{{ it.item_id }}" type="number" min="0" value="0" class="w-20 p-1 border rounded">
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-right"><button class="px-4 py-2 bg-green-600 text-white rounded">Order</button></div>
+  </form>
+</div>
+{% endblock %}
