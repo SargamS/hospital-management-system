@@ -1,11 +1,8 @@
 from flask import Flask, render_template, request, redirect
-import sqlite3
-
-# Initialize Flask app
-app = Flask(__name__)
-
-# Connect to SQLite database
-db = sqlite3.connect("hospital.db", check_same_thread=False)
+import sqlite3, os
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(BASE_DIR, "hospital.db")
+db = sqlite3.connect(db_path, check_same_thread=False)
 cursor = db.cursor()
 
 # Create table if not exists
