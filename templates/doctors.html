@@ -1,0 +1,8 @@
+<h2>Available Doctors</h2>
+<table>
+  <tr><th>Name</th><th>Department</th><th>Room No.</th></tr>
+  {% for doc in doctors %}
+  <tr><td>{{ doc[0] }}</td><td>{{ doc[1] }}</td><td>{{ doc[2] }}</td></tr>
+  {% endfor %}
+</table>
+<a href="/">Back to Home</a>
