@@ -1,16 +1,23 @@
 from flask import Flask, render_template, request, redirect
-import mysql.connector
+import sqlite3
 
-app = Flask(__name__)
-
-# Connect to MySQL
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="hello",
-    database="hello"
-)
+# Create (or connect) to local SQLite database file
+db = sqlite3.connect("hospital.db", check_same_thread=False)
 cursor = db.cursor()
+
+# Create table if not exists
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS appt(
+    idno TEXT PRIMARY KEY,
+    name TEXT,
+    age INTEGER,
+    gender TEXT,
+    phone TEXT,
+    bg TEXT
+)
+''')
+db.commit()
+
 
 @app.route('/')
 def home():
