@@ -165,14 +165,12 @@ def delete_patient(idno):
     execute("DELETE FROM appt WHERE idno = ?", (idno,))
     flash("Patient deleted", "success")
     return redirect(url_for('appointments'))
-
 # ---------------------------------------------------------
 # 👩‍⚕️ PATIENT MANAGEMENT
 # ---------------------------------------------------------
 @app.route('/patients')
 def patients():
-    cursor.execute("SELECT * FROM patients")
-    data = cursor.fetchall()
+    data = query_all("SELECT * FROM patients ORDER BY patient_id DESC")
     return render_template('patients.html', data=data)
 
 @app.route('/add_patient', methods=['GET', 'POST'])
@@ -185,18 +183,19 @@ def add_patient():
         address = request.form['address']
         disease = request.form['disease']
 
-        cursor.execute("INSERT INTO patients (name, age, gender, phone, address, disease) VALUES (?, ?, ?, ?, ?, ?)",
-                       (name, age, gender, phone, address, disease))
-        db.commit()
-        return redirect('/patients')
+        execute(
+            "INSERT INTO patients (name, age, gender, phone, address, disease) VALUES (?, ?, ?, ?, ?, ?)",
+            (name, age, gender, phone, address, disease)
+        )
+        flash("Patient added successfully", "success")
+        return redirect(url_for('patients'))
     return render_template('add_patient.html')
 
-@app.route('/delete_patient/<int:id>')
-def delete_patient(id):
-    cursor.execute("DELETE FROM patients WHERE patient_id=?", (id,))
-    db.commit()
-    return redirect('/patients')
-
+@app.route('/delete_registered_patient/<int:id>')   # 👈 renamed to avoid conflict
+def delete_registered_patient(id):
+    execute("DELETE FROM patients WHERE patient_id=?", (id,))
+    flash("Patient deleted successfully", "success")
+    return redirect(url_for('patients'))
 
 # --------- Doctors -----------
 @app.route('/doctors')
