@@ -1,45 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Appointments - Hospital Management System</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-  <div class="container">
-    <h1>📋 Patient Appointments</h1>
-    
-    {% if data %}
-    <table>
-      <thead>
-        <tr>
-          <th>Aadhaar No</th>
-          <th>Name</th>
-          <th>Age</th>
-          <th>Gender</th>
-          <th>Phone</th>
-          <th>Blood Group</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for row in data %}
-        <tr>
-          <td>{{ row[0] }}</td>
-          <td>{{ row[1] }}</td>
-          <td>{{ row[2] }}</td>
-          <td>{{ row[3] }}</td>
-          <td>{{ row[4] }}</td>
-          <td>{{ row[5] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% else %}
-      <p>No appointments found yet.</p>
-    {% endif %}
-
-    <br>
-    <a href="/">⬅️ Back to Home</a>
-  </div>
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white rounded-2xl p-6 shadow">
+  <h2 class="text-lg font-semibold">Patients / Appointments</h2>
+  <table class="min-w-full mt-4">
+    <thead class="text-left text-sm text-slate-600">
+      <tr><th>Aadhaar</th><th>Name</th><th>Age</th><th>Phone</th><th>Blood</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for r in data %}
+      <tr class="border-t">
+        <td class="py-2">{{ r.idno }}</td>
+        <td>{{ r.name }}</td>
+        <td>{{ r.age }}</td>
+        <td>{{ r.phone }}</td>
+        <td>{{ r.bg }}</td>
+        <td>
+          <form method="post" action="{{ url_for('delete_patient', idno=r.idno) }}" onsubmit="return confirm('Delete patient?')">
+            <button class="px-2 py-1 text-sm bg-red-500 text-white rounded">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
