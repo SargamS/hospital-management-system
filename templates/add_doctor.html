@@ -1,1 +1,13 @@
-
+{% extends "base.html" %}
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow">
+  <h3 class="text-lg font-semibold">Add Doctor</h3>
+  <form method="post" class="mt-4 space-y-3">
+    <input name="name" placeholder="Name" required class="w-full p-2 border rounded">
+    <input name="specialization" placeholder="Specialization" required class="w-full p-2 border rounded">
+    <input name="phone" placeholder="Phone" class="w-full p-2 border rounded">
+    <input name="email" placeholder="Email" class="w-full p-2 border rounded">
+    <div class="text-right"><button class="px-4 py-2 bg-green-600 text-white rounded">Add</button></div>
+  </form>
+</div>
+{% endblock %}
