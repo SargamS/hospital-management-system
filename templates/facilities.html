@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white rounded-2xl p-6 shadow">
+  <h3 class="text-lg font-semibold">Bed & Facility Management</h3>
+  <a href="{{ url_for('add_bed') }}" class="px-3 py-2 mt-3 bg-green-600 text-white rounded">Add Bed</a>
+  <table class="min-w-full mt-4">
+    <thead><tr><th>Bed ID</th><th>Room</th><th>Type</th><th>Availability</th><th>Patient</th><th></th></tr></thead>
+    <tbody>
+    {% for b in beds %}
+      <tr class="border-t">
+        <td>{{ b.bed_id }}</td>
+        <td>{{ b.room_no }}</td>
+        <td>{{ b.bed_type }}</td>
+        <td>{{ b.availability }}</td>
+        <td>{{ b.patient_id or '-' }}</td>
+        <td>
+        {% if b.availability == 'available' %}
+          <form method="post" action="{{ url_for('assign_bed') }}" class="flex gap-2">
+            <input type="hidden" name="bed_id" value="{{ b.bed_id }}">
+            <input name="patient_id" placeholder="Aadhaar" class="p-1 border rounded">
+            <button class="px-2 py-1 bg-green-600 text-white rounded">Assign</button>
+          </form>
+        {% else %}
+          <form method="post" action="{{ url_for('release_bed', bed_id=b.bed_id) }}">
+            <button class="px-2 py-1 bg-red-500 text-white rounded">Release</button>
+          </form>
+        {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
