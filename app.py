@@ -96,8 +96,10 @@ def execute(query, params=()):
     conn.commit()
     return cur.lastrowid
 
+
+# ✅ FIXED: dashboard_counts uses correct tables
 def dashboard_counts():
-    total_patients = query_one("SELECT COUNT(*) AS c FROM appt")["c"]
+    total_patients = query_one("SELECT COUNT(*) AS c FROM patients")["c"]
     total_doctors = query_one("SELECT COUNT(*) AS c FROM doctors")["c"]
     total_nurses = query_one("SELECT COUNT(*) AS c FROM nurses")["c"]
     total_medicines = query_one("SELECT COUNT(*) AS c FROM medicines")["c"]
@@ -112,66 +114,39 @@ def dashboard_counts():
         available_beds=available_beds
     )
 
+
 # ---------------- Routes ----------------
 
 @app.route('/')
 def index():
-    # index provides quick links and redirect to dashboard
     return render_template("index.html")
+
 
 @app.route('/dashboard')
 def dashboard():
     counts = dashboard_counts()
-    # sample chart data (you can make dynamic)
     medicine_stock = query_all("SELECT name, quantity FROM medicines ORDER BY med_id DESC LIMIT 8")
     med_labels = [r["name"] for r in medicine_stock]
     med_values = [r["quantity"] for r in medicine_stock]
-    # revenue mock (sum of bills)
+
     total_revenue_row = query_one("SELECT SUM(total) as s FROM bills")
     total_revenue = float(total_revenue_row["s"]) if total_revenue_row["s"] is not None else 0.0
-    return render_template("dashboard.html",
-                           counts=counts,
-                           med_labels=json.dumps(med_labels),
-                           med_values=json.dumps(med_values),
-                           total_revenue=total_revenue)
+
+    return render_template(
+        "dashboard.html",
+        counts=counts,
+        med_labels=json.dumps(med_labels),
+        med_values=json.dumps(med_values),
+        total_revenue=total_revenue
+    )
 
 
 # --------- Patients -----------
-@app.route('/register', methods=['GET','POST'])
-def register():
-    if request.method == 'POST':
-        idno = request.form['idno'].strip()
-        name = request.form['name'].strip()
-        age = int(request.form['age'])
-        gender = request.form['gender']
-        phone = request.form['phone'].strip()
-        bg = request.form['bg']
-        try:
-            execute("INSERT INTO appt (idno,name,age,gender,phone,bg) VALUES (?, ?, ?, ?, ?, ?)",
-                    (idno, name, age, gender, phone, bg))
-            flash("Patient registered successfully", "success")
-            return redirect(url_for('appointments'))
-        except Exception as e:
-            flash(f"Error registering patient: {e}", "danger")
-    return render_template("register.html")
-
-@app.route('/appointments')
-def appointments():
-    rows = query_all("SELECT * FROM appt ORDER BY name")
-    return render_template("appointments.html", data=rows)
-
-@app.route('/patient/<idno>/delete', methods=['POST'])
-def delete_patient(idno):
-    execute("DELETE FROM appt WHERE idno = ?", (idno,))
-    flash("Patient deleted", "success")
-    return redirect(url_for('appointments'))
-# ---------------------------------------------------------
-# 👩‍⚕️ PATIENT MANAGEMENT
-# ---------------------------------------------------------
 @app.route('/patients')
 def patients():
     data = query_all("SELECT * FROM patients ORDER BY patient_id DESC")
     return render_template('patients.html', data=data)
+
 
 @app.route('/add_patient', methods=['GET', 'POST'])
 def add_patient():
@@ -191,11 +166,13 @@ def add_patient():
         return redirect(url_for('patients'))
     return render_template('add_patient.html')
 
-@app.route('/delete_registered_patient/<int:id>')   # 👈 renamed to avoid conflict
+
+@app.route('/delete_registered_patient/<int:id>')
 def delete_registered_patient(id):
     execute("DELETE FROM patients WHERE patient_id=?", (id,))
     flash("Patient deleted successfully", "success")
     return redirect(url_for('patients'))
+
 
 # --------- Doctors -----------
 @app.route('/doctors')
@@ -203,7 +180,8 @@ def doctors():
     rows = query_all("SELECT * FROM doctors ORDER BY name")
     return render_template("doctors.html", doctors=rows)
 
-@app.route('/add_doctor', methods=['GET','POST'])
+
+@app.route('/add_doctor', methods=['GET', 'POST'])
 def add_doctor():
     if request.method == 'POST':
         name = request.form['name']
@@ -216,19 +194,26 @@ def add_doctor():
         return redirect(url_for('doctors'))
     return render_template("add_doctor.html")
 
+
 @app.route('/doctor/<int:doc_id>/delete', methods=['POST'])
 def delete_doctor(doc_id):
     execute("DELETE FROM doctors WHERE doc_id = ?", (doc_id,))
     flash("Doctor removed", "success")
     return redirect(url_for('doctors'))
 
+
 # --------- Nurses -----------
 @app.route('/nurses')
 def nurses():
-    rows = query_all("SELECT n.nurse_id, n.name, n.shift, n.assigned_to, d.name as doctor_name FROM nurses n LEFT JOIN doctors d ON n.assigned_to = d.doc_id ORDER BY n.name")
+    rows = query_all("""
+        SELECT n.nurse_id, n.name, n.shift, n.assigned_to, d.name as doctor_name
+        FROM nurses n LEFT JOIN doctors d ON n.assigned_to = d.doc_id
+        ORDER BY n.name
+    """)
     return render_template("nurses.html", nurses=rows, doctors=query_all("SELECT * FROM doctors"))
 
-@app.route('/add_nurse', methods=['GET','POST'])
+
+@app.route('/add_nurse', methods=['GET', 'POST'])
 def add_nurse():
     if request.method == 'POST':
         name = request.form['name']
@@ -240,34 +225,39 @@ def add_nurse():
         return redirect(url_for('nurses'))
     return render_template("add_nurse.html", doctors=query_all("SELECT * FROM doctors"))
 
+
 # --------- Facilities / Beds -----------
 @app.route('/facilities')
 def facilities():
     beds = query_all("SELECT * FROM facilities ORDER BY room_no, bed_id")
     return render_template("facilities.html", beds=beds)
 
-@app.route('/add_bed', methods=['GET','POST'])
+
+@app.route('/add_bed', methods=['GET', 'POST'])
 def add_bed():
     if request.method == 'POST':
         room_no = request.form['room_no']
         bed_type = request.form['bed_type']
-        execute("INSERT INTO facilities (room_no, bed_type, availability) VALUES (?, ?, ?)", (room_no, bed_type, 'available'))
+        execute("INSERT INTO facilities (room_no, bed_type, availability) VALUES (?, ?, ?)",
+                (room_no, bed_type, 'available'))
         flash("Bed added", "success")
         return redirect(url_for('facilities'))
     return render_template("add_bed.html")
+
 
 @app.route('/assign_bed', methods=['POST'])
 def assign_bed():
     bed_id = int(request.form['bed_id'])
     patient_id = request.form['patient_id'].strip()
-    # check bed available
     bed = query_one("SELECT * FROM facilities WHERE bed_id = ?", (bed_id,))
     if bed and bed['availability'] == 'available':
-        execute("UPDATE facilities SET availability=?, patient_id=? WHERE bed_id=?", ('occupied', patient_id, bed_id))
+        execute("UPDATE facilities SET availability=?, patient_id=? WHERE bed_id=?",
+                ('occupied', patient_id, bed_id))
         flash("Bed assigned", "success")
     else:
         flash("Bed not available", "danger")
     return redirect(url_for('facilities'))
+
 
 @app.route('/release_bed/<int:bed_id>', methods=['POST'])
 def release_bed(bed_id):
@@ -275,13 +265,15 @@ def release_bed(bed_id):
     flash("Bed released", "success")
     return redirect(url_for('facilities'))
 
+
 # --------- Pharmacy / Medicines -----------
 @app.route('/pharmacy')
 def pharmacy():
     meds = query_all("SELECT * FROM medicines ORDER BY name")
     return render_template("pharmacy.html", medicines=meds)
 
-@app.route('/add_medicine', methods=['GET','POST'])
+
+@app.route('/add_medicine', methods=['GET', 'POST'])
 def add_medicine():
     if request.method == 'POST':
         name = request.form['name']
@@ -291,6 +283,7 @@ def add_medicine():
         flash("Medicine added", "success")
         return redirect(url_for('pharmacy'))
     return render_template("add_medicine.html")
+
 
 @app.route('/buy_medicine', methods=['POST'])
 def buy_medicine():
@@ -303,15 +296,16 @@ def buy_medicine():
         if med['quantity'] >= qty:
             new_qty = med['quantity'] - qty
             execute("UPDATE medicines SET quantity=? WHERE med_id=?", (new_qty, med_id))
-            # create simple bill entry
             desc = f"Medicine: {med['name']} x{qty}"
             amount = float(med['price']) * qty
             execute("INSERT INTO bills (patient_id, items, total, date) VALUES (?, ?, ?, ?)",
-                    ('store', json.dumps([dict(desc=desc, amount=amount)]), amount, datetime.datetime.now().isoformat()))
+                    ('store', json.dumps([dict(desc=desc, amount=amount)]),
+                     amount, datetime.datetime.now().isoformat()))
             flash("Medicine purchased", "success")
         else:
             flash("Insufficient stock", "danger")
     return redirect(url_for('pharmacy'))
+
 
 # --------- Canteen (Food ordering) -----------
 @app.route('/canteen')
@@ -319,6 +313,7 @@ def canteen():
     items = query_all("SELECT * FROM canteen_items ORDER BY name")
     recent_orders = query_all("SELECT * FROM canteen_orders ORDER BY created_at DESC LIMIT 10")
     return render_template("canteen.html", items=items, orders=recent_orders)
+
 
 @app.route('/add_canteen_item', methods=['POST'])
 def add_canteen_item():
@@ -328,13 +323,13 @@ def add_canteen_item():
     flash("Canteen item added", "success")
     return redirect(url_for('canteen'))
 
-@app.route('/order_food', methods=['GET','POST'])
+
+@app.route('/order_food', methods=['GET', 'POST'])
 def order_food():
     if request.method == 'POST':
         patient_id = request.form['patient_id']
         items = []
         total = 0.0
-        # collect item quantities
         for k, v in request.form.items():
             if k.startswith('item_') and v and int(v) > 0:
                 item_id = int(k.split('_', 1)[1])
@@ -342,7 +337,8 @@ def order_food():
                 item_row = query_one("SELECT * FROM canteen_items WHERE item_id = ?", (item_id,))
                 if item_row:
                     subtotal = float(item_row['price']) * qty
-                    items.append(dict(item_id=item_id, name=item_row['name'], qty=qty, price=float(item_row['price']), subtotal=subtotal))
+                    items.append(dict(item_id=item_id, name=item_row['name'], qty=qty,
+                                      price=float(item_row['price']), subtotal=subtotal))
                     total += subtotal
         if not items:
             flash("No items selected", "danger")
@@ -354,16 +350,16 @@ def order_food():
     items = query_all("SELECT * FROM canteen_items ORDER BY name")
     return render_template("order_food.html", items=items)
 
+
 # --------- Billing -----------
-@app.route('/billing', methods=['GET','POST'])
+@app.route('/billing', methods=['GET', 'POST'])
 def billing():
     if request.method == 'POST':
         patient_id = request.form['patient_id']
-        # items lines provided as description and amount pairs
         lines = []
         total = 0.0
         n = int(request.form.get('line_count', '0'))
-        for i in range(1, n+1):
+        for i in range(1, n + 1):
             desc = request.form.get(f'desc_{i}')
             amt = float(request.form.get(f'amt_{i}', '0'))
             if desc and amt:
@@ -373,14 +369,15 @@ def billing():
                 (patient_id, json.dumps(lines), total, datetime.datetime.now().isoformat()))
         flash("Bill generated", "success")
         return redirect(url_for('dashboard'))
-    patients = query_all("SELECT idno, name FROM appt ORDER BY name")
+    patients = query_all("SELECT patient_id, name FROM patients ORDER BY name")
     return render_template("billing.html", patients=patients)
+
 
 # -------------- Utility routes ------------
 @app.route('/reset-demo', methods=['POST'])
 def reset_demo():
-    # CAUTION: only for demo — wipes DB tables (use in dev)
-    tables = ['appt','doctors','nurses','medicines','facilities','canteen_items','canteen_orders','bills']
+    tables = ['patients', 'doctors', 'nurses', 'medicines', 'facilities',
+              'canteen_items', 'canteen_orders', 'bills']
     for t in tables:
         execute(f"DELETE FROM {t}")
     flash("Demo data cleared", "success")
@@ -388,6 +385,5 @@ def reset_demo():
 
 
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 10000))
     app.run(debug=False, host="0.0.0.0", port=port)
