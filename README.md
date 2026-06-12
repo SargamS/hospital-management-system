@@ -100,7 +100,7 @@ The SQLite database (`hospital.db`) is created automatically on first run — no
 ## 📸 Screenshots
 
 ### Dashboard — live stats, medicine stock chart & recent patients
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](dashboard.png)
 
 ### Patient Management — searchable records with add/delete
 ![Patient Management](screenshots/patients.png)
