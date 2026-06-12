@@ -85,28 +85,14 @@ The SQLite database (`hospital.db`) is created automatically on first run — no
 
 ---
 
-## 🧠 Technical Highlights
-
-**Relational data modeling** — The schema links nurses to doctors via foreign key, beds to patients via `patient_id`, and bills to patients with JSON-serialized line items, reflecting real hospital record-keeping patterns.
-
-**Inventory with auto-billing** — Purchasing a medicine decrements stock and simultaneously inserts a bill record, keeping transactions consistent without a separate transaction layer.
-
-**Dashboard aggregation** — The dashboard route runs multiple `COUNT` and `SUM` queries and passes structured data to the frontend for a live medicine stock bar chart (rendered via Chart.js).
-
-**Zero-config persistence** — Using SQLite with `executescript` for schema initialization means the app is fully self-contained and deploys to Render with a single `gunicorn` command and no external database service.
-
----
-
-## 📸 Screenshots
-
 ### Dashboard — live stats, medicine stock chart & recent patients
 ![Dashboard](dashboard.png)
 
 ### Patient Management — searchable records with add/delete
-![Patient Management](screenshots/patients.png)
+![Patient Management](patients.png)
 
 ### Billing — itemized bill form with live receipt preview
-![Billing](screenshots/billing.png)
+![Billing](billing.png)
 
 ---
 
@@ -119,9 +105,3 @@ gunicorn app:app
 ```
 
 Environment variable `PORT` is respected at startup (`os.environ.get("PORT", 10000)`), making it compatible with any PaaS platform.
-
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
