@@ -2,7 +2,6 @@
 
 **🔗 Live Demo:** [hospital-management-system-mkkr.onrender.com](https://hospital-management-system-mkkr.onrender.com)
 
----
 
 The goal was to build a real-world CRUD application that models domain complexity (relationships between patients, staff, facilities, and transactions) while staying deployment-ready.
 
